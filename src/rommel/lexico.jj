@@ -1,0 +1,418 @@
+options{
+	//LOOKAHEAD=10;
+	FORCE_LA_CHECK=true;
+	IGNORE_CASE=true;
+	static = false;
+}
+PARSER_BEGIN(lexico)
+package rommel;
+import java.io.*;
+import java.util.Vector;
+public class lexico{
+
+    public static Vector<String> contador = new Vector<String>();
+
+	public static void main(String[] args)throws ParseException,TokenMgrError{
+		
+		try{
+
+			lexico analizador = new lexico(System.in);
+			analizador.Programa();
+			System.out.println("Se a compilado con exito.");
+
+		}catch (ParseException e) {
+			System.out.println(e.getMessage());
+			System.out.println("Error encontrado al realizar analisis");
+			
+		}
+
+		
+	}
+	
+}
+PARSER_END(lexico)
+
+//Palabras Reservadas 
+TOKEN[IGNORE_CASE]:
+{
+	<ENTRADA :"entrada">//{System.out.println("Palabra Reservada ---- "+image);}//1
+	|<MAIN:"main">//{System.out.println("Palabra Reservada ---- "+image);}//2
+	|<SALIDA:"salida">//{System.out.println("Palabra Reservada ---- "+image);}3
+	|<HACERSI:"hacer si">//{System.out.println("Palabra Reservada ---- "+image);}4
+	|<HACERMIENTRAS: "hacer mientras">//{System.out.println("Palabra Reservada ---- "+image);}5
+	|<CONTRARIO:"contrario">//{System.out.println("Palabra Reservada ---- "+image);}6
+	|<MIENTRAS:"mientras">//{System.out.println("Palabra Reservada ---- "+image);}7
+	|<HACER:"hacer">//{System.out.println("Palabra Reservada ---- "+image);}8
+	|<CICLO:"ciclo">//{System.out.println("Palabra Reservada ---- "+image);}9
+	|<FUNCION:"funcion">//{System.out.println("palabra Reservada ---- "+image);}10
+	|<RETORNA:"retorna">//{System.out.println("Palabra Reservada ---- "+image);}11
+}
+
+//OPDS Logicos
+TOKEN[IGNORE_CASE]:
+{
+     <OR: "||">//{System.out.println("Operadores Logicos ---- "+image);}12
+	|<AND: "&&">//{System.out.println("Operadores Logicos ---- "+image);}13
+	|<VERDAD:"verdad">//{System.out.println("Operadores Logicos ---- "+image);}14
+	|<FALSO:"falso">//{System.out.println("Operadores Logicos ---- "+image);}15
+       
+}
+//Operadores Matemáticos
+
+TOKEN: {
+	
+	<ASIGNACION:"=">//{System.out.println("Operadores Matemáticos ---- "+image);}16
+	|<INCREMENTO:"++">//{System.out.println("Operadores Matemáticos ---- "+image);}17
+	|<DECREMENTO : "--">//{System.out.println("Operadores Matemáticos ---- "+image);}18
+	|<RESTA: "-">//{System.out.println("Operadores Matemáticos ---- "+image);}19
+	|<SUMA: "+">//{System.out.println("Operadores Matemáticos ---- "+image);}20
+	|<MULTIPLICACION:"*">//{System.out.println("Operadores Matemáticos ---- "+image);}21
+	|<DIVISION:"/">//{System.out.println("Operadores Matemáticos ---- "+image);}22
+	|<MODULO:"%">//{System.out.println("Operadores Matemáticos ---- "+image);}23
+}
+
+//Comparadores
+
+TOKEN: {
+	<MENOR: "<">//{System.out.println("Comparadores ---- "+image);}24
+	|<MAYOR: ">">//{System.out.println("Comparadores ---- "+image);}25
+	|<MENORIGUAL: "<=">//{System.out.println("Comparadores ---- "+image);}26
+	|<MAYORIGUAL: ">=">//{System.out.println("Comparadores ---- "+image);}27
+	|<IGUAL: "==">//{System.out.println("Comparadores ---- "+image);}28
+	|<DIFERENTE: "!=">//{System.out.println("Comparadores ---- "+image);}29
+}
+
+//Delimitadores
+
+TOKEN: {
+	<PARENTECISA: "(">//{System.out.println("Delimitadores ---- "+image);}30
+	|<PARENTCISB: ")">//{System.out.println("Delimitadores ---- "+image);}31
+	|<LLAVEA: "{">//{System.out.println("Delimitadores ---- "+image);}32
+	|<LLAVEC: "}">//{System.out.println("Delimitadores ---- "+image);}33
+	|<COMA: ",">//{System.out.println("Delimitadores ---- "+image);}34
+	|<PUNTO: ".">//{System.out.println("Delimitadores ---- "+image);}35
+	|<PUNTOYCOMA: ";">//{System.out.println("Delimitadores ---- "+image);}36
+	|<COMASUPERIOR: "'">//{System.out.println("Delimitadores ---- "+image);}37
+	|<DOSCOMAS: "\"">//{System.out.println("Delimitadores ---- "+image);}38
+	|<CORCHETEA: "[">//{System.out.println("Delimitadores ---- "+image);}39
+	|<CORCHETEB: "]">//{System.out.println("Delimitadores ---- "+image);}40
+	|<SALTODELINEA: <DOSCOMAS>["\\"]["n"]<DOSCOMAS>>//{System.out.println("Delimitadores ---- "+image);}41
+}
+
+//Tipos de dato y otros
+
+TOKEN[IGNORE_CASE]:
+{
+	<INT:"int">//{System.out.println("Tipos de Datos ---- "+image);}42
+	|<LONG: "long">//{System.out.println("Tipos de Datos ---- "+image);}43
+	| <FLOAT: "float">//{System.out.println("Tipos de Datos ---- "+image);}44
+	| <BOOLEAN: "boolean">//{System.out.println("Tipos de Datos ---- "+image);}45
+	| <CHAR: "char">//{System.out.println("Tipos de Datos ---- "+image);}46
+	| <STRING: "string">//{System.out.println("Tipos de Datos ---- "+image);}47
+	| <VACIO: "void">//{System.out.println("Tipos de Datos ---- "+image);}48
+	| <DOUBLE: "double">//{System.out.println("Tipos de Datos ---- "+image);}49
+	| <NUMEROPOSITIVO : (["0"-"9"])+>//{System.out.println("Tipos de Datos ---- "+image);}50
+	| <NUMERONEGATIVO : <RESTA>(["0" - "9"])+>//{System.out.println("Tipos de Datos ---- "+image);}
+	| <DECIMAL : (["0"-"9"])+["."](["0"-"9"])+ >//{System.out.println("Tipos de Datos ---- "+image);}
+	| <CADENA : <DOSCOMAS>["a"-"z","A"-"Z","0"-"9"," "](["a"-"z","A"-"Z","0"-"9"," ",":",";","."])*<DOSCOMAS>>//{System.out.println("Tipos de Datos ---- "+image);}
+	| <CARACTER : <COMASUPERIOR>["a"-"z","A"-"Z","0"-"9"]<COMASUPERIOR>>//{System.out.println("Tipos de Datos ---- "+image);}
+	| <IDENTIFICADOR : ["a"-"z","A"-"Z"](["a"-"z","A"-"Z","0"-"9","_"])*>//{System.out.println("Tipos de Datos ---- "+image);}
+        
+}
+//errores
+TOKEN:
+{
+	<ERROR1:"$">{System.out.println("CARACTER NO VALIDO"+image);}
+	|<ERROR2:"#">{System.out.println("CARACTER NO VALIDO"+image);}
+	|<ERROR3:"°">{System.out.println("CARACTER NO VALIDO"+image);}
+	|<ERROR4:"¡">{System.out.println("CARACTER NO VALIDO"+image);}
+	|<ERROR5:"^">{System.out.println("CARACTER NO VALIDO"+image);}
+}
+SKIP : 
+{ 
+        " "| "\n" | "\r\n"  | "\t"
+
+}
+
+void Programa() :
+{
+	System.out.println("Sentencias");
+	TokenAsignaciones.SetTables();	
+	TokenAsignaciones.Clean();
+}
+
+{
+	try{
+	<MAIN><PARENTECISA><PARENTCISB><LLAVEA>Sentencias()<LLAVEC><EOF>	
+}catch(ParseException er){
+	contador.addElement(er.getMessage());
+}
+}
+
+void Sentencias():
+{	
+	
+}
+{
+	(	
+	  	
+	    VariablesLocales()
+	    |SentenciaIf() 	
+		| LOOKAHEAD(3)SentenciaAsignacion()<PUNTOYCOMA>{TokenAsignaciones.segunda = 0;}
+		| SentenciaWrite()	
+		//| SentenciaRead()<PUNTOYCOMA>
+		//| SentenciaSwitch()
+	)*
+}
+
+
+void VariablesLocales():
+{
+	int td;
+	Token var;	
+}
+{
+	try{
+	(
+		(TiposDatos()){td = token.kind;}
+		var = <IDENTIFICADOR>{
+			System.out.println("Si entre a Variables Locales XXXXXX");
+			TokenAsignaciones.InsertarSimbolo(var,td);}
+		[VariablesAsignacion(var)](<COMA>var = <IDENTIFICADOR>{TokenAsignaciones.InsertarSimbolo(var, td);}
+		[VariablesAsignacion(var)])*<PUNTOYCOMA> 
+	) (Proceso())
+
+     /*Dato_tipo()<IDENTIFICADOR>(<ASIGNACION>TipoDeNumero())?<PUNTOYCOMA>
+     |<BOOLEAN><IDENTIFICADOR><ASIGNACION>Oplogicos()<PUNTOYCOMA>*/
+//LOOKAHEAD(6)
+	//TipodeDatosInt()<IDENTIFICADOR>(<ASIGNACION>TipoDeNumero())?<PUNTOYCOMA>|
+	//TipodeDatosChar()<IDENTIFICADOR><ASIGNACION><CARACTER><PUNTOYCOMA>|
+	
+}catch(ParseException er){
+	System.out.println("eureca");
+	contador.addElement(er.getMessage());
+}
+}
+void TiposDatos():
+{}
+{
+	 <INT>
+	|<FLOAT>
+	|<STRING>
+	|<CARACTER>
+}
+
+void Proceso():
+{}
+{
+	Sentencias()
+}
+
+//Sentencia IF
+void SentenciaIf():
+{}
+{
+	<HACERSI><PARENTECISA> A() <PARENTCISB> <LLAVEA> Sentencias() <LLAVEC> (Sino())? 
+}
+void Sino():
+{}
+{
+	<CONTRARIO>   (<PARENTECISA> A() <PARENTCISB>)? <LLAVEA> Sentencias() <LLAVEC>
+
+}
+
+void SentenciaAsignacion():
+{
+	Token v1;
+	Token v2;
+	Token v3;
+	int aux;
+	String res;
+	boolean imp = false;
+}
+{
+  v1 = <IDENTIFICADOR> 
+  (<ASIGNACION>
+  (TiposAsignaciones())
+  {  
+    v2 = token;
+	res = TokenAsignaciones.checkAsing(v1, v2);
+	
+	if(res != " ")
+	{
+		System.out.println(res);
+		imp = true;
+	}
+  }
+  (LOOKAHEAD(2)OpAritmetico()
+  TiposAsignaciones()
+  {  
+    v3 = token;
+	res = TokenAsignaciones.checkAsing(v1, v3);
+	
+	if(res != " " && !imp)
+	{
+		System.out.println(res);
+	}
+  })*  
+  |
+  (<INCREMENTO>|<DECREMENTO>)
+  {  
+	res = TokenAsignaciones.checkVariable(v1);
+	
+	if(res != " ")	
+		System.out.println(res);	
+  })
+  
+  //SentenciaAsignacion ya trae <SEMICOLON> en el metodo Sentencias()
+}
+void VariablesAsignacion(Token v1):
+{
+	Token v2;
+	Token v3;
+	String res;	
+	boolean imp = false;
+}
+{
+	<ASIGNACION>
+	(TiposAsignaciones())
+	{ 
+		v2 = token;
+		res = TokenAsignaciones.checkAsing(v1, v2);
+		
+		if(res != " ")
+		{
+			System.out.println(res);
+			imp = true;
+		}
+	  }
+	  (OpAritmetico()
+	  TiposAsignaciones()
+	  {  
+		v3 = token;
+		res = TokenAsignaciones.checkAsing(v1, v3);
+		
+		if(res != " " && !imp)
+		{
+			System.out.println(res);
+		}
+	  })*
+	  {System.out.println("pase");}
+}
+void TiposAsignaciones():
+{}
+{
+	  <IDENTIFICADOR> 
+	| <NUMEROPOSITIVO> 
+	| <DECIMAL> 
+	| <CADENA> 
+	| <CARACTER>
+}
+
+int OpAritmetico():
+{}
+{
+	  (<SUMA> {return 1;})
+	| (<RESTA> {return 1;})
+	| (<MULTIPLICACION> {return 1;})
+	| (<DIVISION> {return 1;})
+	| ({return 0;})
+	
+	{return 0;}
+}
+
+void OpAritmetico2():
+{}
+{
+	  <SUMA> 
+	| <RESTA>
+	| <MULTIPLICACION>
+	| <DIVISION>
+	
+}
+
+void A():
+{}
+{
+	  Comparaciones() ([(<AND>|<OR>)] Comparaciones())*
+}
+//Fin sentencia if
+
+void Comparaciones():
+{}
+{
+	Valor()Operadores()Valor()
+}
+
+void Valor():
+{}
+{
+	//LOOKAHEAD(2) (<IDENTIFICADOR> | <DECIMAL>) | Expresion()
+	(<IDENTIFICADOR> | <DECIMAL>) ( OpAritmetico2() (<IDENTIFICADOR>|<DECIMAL>))+
+}
+
+
+/*void Expresion():
+{}
+{
+    LOOKAHEAD(2)
+
+    (<DECIMAL> | <IDENTIFICADOR>)
+	|(<IDENTIFICADOR>|<DECIMAL>) OpAritmetico() (<IDENTIFICADOR>|<DECIMAL>) 
+}*/
+
+void Operadores():
+{}
+{
+	   <MENOR> 
+	  | <MAYOR>
+	  | <IGUAL> 
+	  | <DIFERENTE>
+	  |	<MENORIGUAL>
+	  | <MAYORIGUAL>
+}
+
+
+
+
+/*
+
+void DeclaracionUnaVariable():
+{
+	int td;
+	Token var;	
+}
+{	
+	(TiposDatos())
+	{
+		td = token.kind;
+	}
+	var = <IDENTIFICADOR> 
+	{		
+		TokenAsignaciones.InsertarSimbolo(var, td);
+	} 
+	[VariablesAsignacion(var)]		
+}
+
+*/
+
+//Sentencia WRITE
+
+///cambiar todo este metodo SentenciaWrite
+void SentenciaWrite():
+{}
+{
+	<ENTRADA><MENOR><MENOR> /*(Expresion()(<SUMA><CADENA>)*|<CADENA>(<SUMA>Expresion())*)**/<PUNTOYCOMA> 
+}
+
+/*//Sentencia READ
+void SentenciaRead():
+{}
+{
+	<READ><LPAREN><RPAREN>
+}
+*/
+
+
+
+
